@@ -10,6 +10,7 @@ const state = {
 };
 
 const elements = {
+  hero: document.querySelector(".hero"),
   screens: document.querySelectorAll("[data-screen]"),
   startButton: document.querySelector("#start-button"),
   questionProgress: document.querySelector("#question-progress"),
@@ -30,6 +31,7 @@ function showScreen(screenName) {
   elements.screens.forEach((screen) => {
     screen.classList.toggle("screen--active", screen.dataset.screen === screenName);
   });
+  elements.hero.hidden = screenName !== "start";
 }
 
 function getCurrentQuestion() {
@@ -138,6 +140,7 @@ function handleChoice(selectedButton, choice) {
   elements.feedbackPanel.classList.toggle("is-failure", !choice.isCorrect);
   elements.feedbackResult.textContent = resultText;
   elements.feedbackExplanation.textContent = question.explanation;
+  elements.feedbackPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
   elements.nextButton.focus();
 }
 
