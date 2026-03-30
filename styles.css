@@ -71,6 +71,10 @@ body::before {
   margin-bottom: 16px;
 }
 
+.hero[hidden] {
+  display: none;
+}
+
 .hero__logo {
   width: min(80px, 22vw);
   filter: drop-shadow(0 8px 20px rgba(22, 49, 63, 0.2));
