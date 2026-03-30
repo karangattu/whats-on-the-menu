@@ -1,0 +1,8 @@
+{
+  "name": "whats-on-the-menu",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

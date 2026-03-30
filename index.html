@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A simple offline-capable bird diet quiz game for SFBBO."
+    />
+    <meta name="theme-color" content="#f4c95d" />
+    <title>What's on the Menu?</title>
+    <link rel="icon" href="./assets/sfboo_logo.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <img
+          class="hero__logo"
+          src="./assets/sfboo_logo.png"
+          alt="San Francisco Bay Bird Observatory logo"
+        />
+        <div class="hero__copy">
+          <p class="eyebrow">SFBBO Bird Diet Challenge</p>
+          <h1>What's on the Menu?</h1>
+          <p class="hero__lede">
+            Study the bird, pick the food it is most likely to eat, and see if
+            your field-guide instincts hold up.
+          </p>
+        </div>
+      </header>
+
+      <main class="game-card" aria-live="polite">
+        <section class="screen screen--active" data-screen="start">
+          <div class="panel panel--intro">
+            <p class="panel__label">How to play</p>
+            <h2>Four birds. Four chances.</h2>
+            <p>
+              You will get a random set of 4 birds. Each round shows 1 bird and
+              4 possible diet choices. Pick 1 answer to reveal whether you were
+              right, then continue to the next bird.
+            </p>
+            <button class="button button--primary" id="start-button" type="button">
+              Play Round
+            </button>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="question" aria-labelledby="bird-name">
+          <div class="status-bar">
+            <p class="status-pill" id="question-progress">Bird 1 of 4</p>
+            <p class="status-pill status-pill--score" id="score-pill">Score 0</p>
+          </div>
+
+          <div class="question-layout">
+            <article class="bird-panel">
+              <p class="panel__label">Who's this?</p>
+              <h2 id="bird-name"></h2>
+              <div class="bird-frame">
+                <img id="bird-image" src="" alt="" />
+              </div>
+            </article>
+
+            <section class="choices-panel" aria-labelledby="choice-heading">
+              <div class="choices-panel__header">
+                <p class="panel__label">Pick the diet</p>
+                <h3 id="choice-heading">What belongs on the menu?</h3>
+              </div>
+              <div class="choice-grid" id="choice-grid" role="list"></div>
+            </section>
+          </div>
+
+          <section class="feedback-panel" id="feedback-panel" hidden>
+            <p class="feedback-panel__result" id="feedback-result"></p>
+            <p class="feedback-panel__explanation" id="feedback-explanation"></p>
+            <button class="button button--secondary" id="next-button" type="button">
+              Next Bird
+            </button>
+          </section>
+        </section>
+
+        <section class="screen" data-screen="results">
+          <div class="panel panel--results">
+            <p class="panel__label">Round complete</p>
+            <h2 id="results-title">You scored 0 out of 4</h2>
+            <p id="results-message"></p>
+            <button class="button button--primary" id="replay-button" type="button">
+              Play Again
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
