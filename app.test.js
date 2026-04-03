@@ -6,6 +6,7 @@ import {
   buildChoices,
   buildRound,
   getRevealBirdImage,
+  getRevealViewerTitle,
 } from "./game-data.js";
 
 test("buildRound returns four unique birds from the question bank", () => {
@@ -47,5 +48,11 @@ test("getRevealBirdImage prefers the eating-meal artwork and falls back to the b
     getRevealBirdImage(acornWoodpecker),
     "./assets/acorn_woodpecker_eating_meal.png",
   );
-  assert.equal(getRevealBirdImage(tern), tern.birdImage);
+  assert.equal(getRevealBirdImage(tern), "./assets/tern_eating_meal.png");
+});
+
+test("getRevealViewerTitle describes the expanded artwork view", () => {
+  const tern = QUESTION_BANK.find((entry) => entry.id === "tern");
+
+  assert.equal(getRevealViewerTitle(tern), "Tern up close");
 });

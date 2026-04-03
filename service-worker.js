@@ -1,4 +1,4 @@
-const CACHE_NAME = "whats-on-the-menu-v4";
+const CACHE_NAME = "whats-on-the-menu-v5";
 const CORE_ASSETS = [
   "./",
   "./index.html",
@@ -40,6 +40,7 @@ const CORE_ASSETS = [
   "./assets/seeds_thistle.png",
   "./assets/sfboo_logo.png",
   "./assets/tern_bird.png",
+  "./assets/tern_eating_meal.png",
   "./assets/water_boatmen.png",
   "./assets/water_flea.png",
 ];

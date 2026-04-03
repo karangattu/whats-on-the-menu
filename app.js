@@ -4,6 +4,7 @@ import {
   buildRound,
   getFoodBank,
   getRevealBirdImage,
+  getRevealViewerTitle,
 } from "./game-data.js";
 
 const ROUND_SIZE = 4;
@@ -13,6 +14,7 @@ const state = {
   currentIndex: 0,
   score: 0,
   answered: false,
+  revealViewerOpen: false,
 };
 
 const elements = {
@@ -30,11 +32,17 @@ const elements = {
   feedbackExplanation: document.querySelector("#feedback-explanation"),
   answerReveal: document.querySelector("#answer-reveal"),
   answerRevealImage: document.querySelector("#answer-reveal-image"),
+  revealViewer: document.querySelector("#reveal-viewer"),
+  revealViewerTitle: document.querySelector("#reveal-viewer-title"),
+  revealViewerImage: document.querySelector("#reveal-viewer-image"),
+  revealViewerClose: document.querySelector("#reveal-viewer-close"),
   nextButton: document.querySelector("#next-button"),
   resultsTitle: document.querySelector("#results-title"),
   resultsMessage: document.querySelector("#results-message"),
   replayButton: document.querySelector("#replay-button"),
 };
+
+let revealViewerReturnFocus = null;
 
 function showScreen(screenName) {
   elements.screens.forEach((screen) => {
@@ -77,6 +85,7 @@ function renderQuestion() {
   const choices = buildChoices(question);
 
   state.answered = false;
+  closeRevealViewer({ restoreFocus: false });
   elements.questionProgress.textContent = `Bird ${state.currentIndex + 1} of ${ROUND_SIZE}`;
   updateScoreDisplay();
 
@@ -94,6 +103,7 @@ function renderQuestion() {
   elements.answerReveal.classList.remove("is-visible");
   elements.answerRevealImage.src = "";
   elements.answerRevealImage.alt = "";
+  elements.answerReveal.setAttribute("aria-label", "");
   elements.nextButton.textContent =
     state.currentIndex === ROUND_SIZE - 1 ? "See Score" : "Next Bird";
 }
@@ -149,6 +159,9 @@ function handleChoice(selectedButton, choice) {
     : `Not quite. ${question.birdName} would go for ${acceptedSummary}.`;
   const revealBirdImage = getRevealBirdImage(question);
   const revealMatchesBaseImage = revealBirdImage === question.birdImage;
+  const revealAlt = revealMatchesBaseImage
+    ? question.birdName
+    : `${question.birdName} eating its meal`;
 
   elements.feedbackPanel.hidden = false;
   elements.feedbackPanel.classList.toggle("is-success", choice.isCorrect);
@@ -156,9 +169,8 @@ function handleChoice(selectedButton, choice) {
   elements.feedbackResult.textContent = resultText;
   elements.feedbackExplanation.textContent = question.explanation;
   elements.answerRevealImage.src = revealBirdImage;
-  elements.answerRevealImage.alt = revealMatchesBaseImage
-    ? question.birdName
-    : `${question.birdName} eating its meal`;
+  elements.answerRevealImage.alt = revealAlt;
+  elements.answerReveal.setAttribute("aria-label", `${getRevealViewerTitle(question)}. Tap to expand.`);
   elements.answerReveal.hidden = false;
   requestAnimationFrame(() => {
     elements.answerReveal.classList.add("is-visible");
@@ -166,6 +178,49 @@ function handleChoice(selectedButton, choice) {
   elements.birdPanel.classList.add("is-answered");
   elements.feedbackPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
   elements.nextButton.focus();
+}
+
+function openRevealViewer() {
+  const question = getCurrentQuestion();
+
+  if (!question || elements.answerReveal.hidden) {
+    return;
+  }
+
+  state.revealViewerOpen = true;
+  revealViewerReturnFocus = document.activeElement;
+  elements.revealViewerTitle.textContent = getRevealViewerTitle(question);
+  elements.revealViewerImage.src = elements.answerRevealImage.currentSrc || elements.answerRevealImage.src;
+  elements.revealViewerImage.alt = elements.answerRevealImage.alt;
+  elements.revealViewer.hidden = false;
+  elements.revealViewer.setAttribute("aria-hidden", "false");
+  document.body.classList.add("has-overlay");
+
+  requestAnimationFrame(() => {
+    elements.revealViewer.classList.add("is-visible");
+    elements.revealViewerClose.focus();
+  });
+}
+
+function closeRevealViewer({ restoreFocus = true } = {}) {
+  if (!state.revealViewerOpen && elements.revealViewer.hidden) {
+    return;
+  }
+
+  state.revealViewerOpen = false;
+  elements.revealViewer.hidden = true;
+  elements.revealViewer.classList.remove("is-visible");
+  elements.revealViewer.setAttribute("aria-hidden", "true");
+  elements.revealViewerImage.src = "";
+  elements.revealViewerImage.alt = "";
+  elements.revealViewerTitle.textContent = "";
+  document.body.classList.remove("has-overlay");
+
+  if (restoreFocus && revealViewerReturnFocus instanceof HTMLElement) {
+    revealViewerReturnFocus.focus();
+  }
+
+  revealViewerReturnFocus = null;
 }
 
 function renderResults() {
@@ -222,6 +277,18 @@ function init() {
   elements.startButton.addEventListener("click", startRound);
   elements.nextButton.addEventListener("click", advanceRound);
   elements.replayButton.addEventListener("click", startRound);
+  elements.answerReveal.addEventListener("click", openRevealViewer);
+  elements.revealViewerClose.addEventListener("click", () => closeRevealViewer());
+  elements.revealViewer.addEventListener("click", (event) => {
+    if (event.target instanceof HTMLElement && event.target.dataset.dismissReveal === "true") {
+      closeRevealViewer();
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && state.revealViewerOpen) {
+      closeRevealViewer();
+    }
+  });
   elements.answerRevealImage.addEventListener("error", () => {
     const question = getCurrentQuestion();
 
@@ -231,6 +298,16 @@ function init() {
 
     elements.answerRevealImage.src = question.birdImage;
     elements.answerRevealImage.alt = question.birdName;
+  });
+  elements.revealViewerImage.addEventListener("error", () => {
+    const question = getCurrentQuestion();
+
+    if (!question) {
+      return;
+    }
+
+    elements.revealViewerImage.src = question.birdImage;
+    elements.revealViewerImage.alt = question.birdName;
   });
 
   registerServiceWorker();

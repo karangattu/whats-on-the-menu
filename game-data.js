@@ -199,6 +199,7 @@ export const QUESTION_BANK = [
     id: "tern",
     birdName: "Tern",
     birdImage: "./assets/tern_bird.png",
+    revealBirdImage: "./assets/tern_eating_meal.png",
     correctFoodId: "fish",
     correctFoodLabel: "Fish",
     correctFoodImage: "./assets/fish.png",
@@ -241,6 +242,10 @@ export function buildChoices(question, random = Math.random) {
 
 export function getRevealBirdImage(question) {
   return question.revealBirdImage ?? question.birdImage;
+}
+
+export function getRevealViewerTitle(question) {
+  return `${question.birdName} up close`;
 }
 
 export function getFoodBank() {
