@@ -74,8 +74,17 @@
           </div>
 
           <section class="feedback-panel" id="feedback-panel" hidden>
-            <p class="feedback-panel__result" id="feedback-result"></p>
-            <p class="feedback-panel__explanation" id="feedback-explanation"></p>
+            <div class="feedback-panel__layout">
+              <div class="feedback-panel__copy">
+                <p class="feedback-panel__result" id="feedback-result"></p>
+                <p class="feedback-panel__explanation" id="feedback-explanation"></p>
+              </div>
+              <figure class="answer-reveal" id="answer-reveal" hidden>
+                <div class="answer-reveal__frame">
+                  <img id="answer-reveal-image" src="" alt="" />
+                </div>
+              </figure>
+            </div>
             <button class="button button--secondary" id="next-button" type="button">
               Next Bird
             </button>

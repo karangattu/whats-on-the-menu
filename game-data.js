@@ -66,6 +66,7 @@ export const QUESTION_BANK = [
     id: "acorn-woodpecker",
     birdName: "Acorn Woodpecker",
     birdImage: "./assets/acorn_woodpecker_bird.png",
+    revealBirdImage: "./assets/acorn_woodpecker_eating_meal.png",
     correctFoodId: "acorn",
     correctFoodLabel: "Acorns",
     correctFoodImage: "./assets/acorn.png",
@@ -77,6 +78,7 @@ export const QUESTION_BANK = [
     id: "american-avocet",
     birdName: "American Avocet",
     birdImage: "./assets/american_avocet_bird.png",
+    revealBirdImage: "./assets/american_avocet_eating_meal.png",
     correctFoodId: "waterBoatmen",
     correctFoodLabel: "Water Boatmen",
     correctFoodImage: "./assets/water_boatmen.png",
@@ -88,6 +90,7 @@ export const QUESTION_BANK = [
     id: "american-goldfinch",
     birdName: "American Goldfinch",
     birdImage: "./assets/american_goldfinch_bird.png",
+    revealBirdImage: "./assets/american_goldfinch_eating_meal.png",
     correctFoodId: "seedsThistle",
     correctFoodLabel: "Thistle Seeds",
     correctFoodImage: "./assets/seeds_thistle.png",
@@ -99,6 +102,7 @@ export const QUESTION_BANK = [
     id: "annas-hummingbird",
     birdName: "Anna's Hummingbird",
     birdImage: "./assets/annas_hummingbird_bird.png",
+    revealBirdImage: "./assets/annas_hummingbird_eating_meal.png",
     correctFoodId: "nectar",
     correctFoodLabel: "Nectar",
     correctFoodImage: "./assets/nectar.png",
@@ -110,6 +114,7 @@ export const QUESTION_BANK = [
     id: "canada-goose",
     birdName: "Canada Goose",
     birdImage: "./assets/canada_goose_bird.png",
+    revealBirdImage: "./assets/canada_goose_eating_meal.png",
     correctFoodId: "grass",
     correctFoodLabel: "Grass",
     correctFoodImage: "./assets/grass.png",
@@ -121,6 +126,7 @@ export const QUESTION_BANK = [
     id: "common-raven",
     birdName: "Common Raven",
     birdImage: "./assets/common_raven_bird.png",
+    revealBirdImage: "./assets/common_raven_eating_meal.png",
     correctFoodId: "burger",
     correctFoodLabel: "Burger Scraps",
     correctFoodImage: "./assets/burger.png",
@@ -132,6 +138,7 @@ export const QUESTION_BANK = [
     id: "great-blue-heron",
     birdName: "Great Blue Heron",
     birdImage: "./assets/great_blue_heron_bird.png",
+    revealBirdImage: "./assets/great_blue_heron_eating_meal.png",
     correctFoodId: "fish",
     correctFoodLabel: "Fish",
     correctFoodImage: "./assets/fish.png",
@@ -143,6 +150,7 @@ export const QUESTION_BANK = [
     id: "long-billed-curlew",
     birdName: "Long-billed Curlew",
     birdImage: "./assets/long_billed_curlew_bird.png",
+    revealBirdImage: "./assets/long_billed_curlew_eating_meal.png",
     correctFoodId: "crab",
     correctFoodLabel: "Crabs",
     correctFoodImage: "./assets/crab.png",
@@ -154,6 +162,7 @@ export const QUESTION_BANK = [
     id: "northern-shoveler",
     birdName: "Northern Shoveler",
     birdImage: "./assets/northern_shoveler_bird.png",
+    revealBirdImage: "./assets/northern_shoveler_eating_meal.png",
     correctFoodId: "waterFlea",
     correctFoodLabel: "Water Fleas",
     correctFoodImage: "./assets/water_flea.png",
@@ -165,6 +174,7 @@ export const QUESTION_BANK = [
     id: "red-tailed-hawk",
     birdName: "Red-tailed Hawk",
     birdImage: "./assets/red_tailed_hawk_bird.png",
+    revealBirdImage: "./assets/red_tailed_hawk_eating_meal.png",
     correctFoodId: "mouse",
     correctFoodLabel: "Mice",
     correctFoodImage: "./assets/mouse.png",
@@ -176,6 +186,7 @@ export const QUESTION_BANK = [
     id: "scrub-jay",
     birdName: "Scrub Jay",
     birdImage: "./assets/scrub_jay_bird.png",
+    revealBirdImage: "./assets/scrub_jay_eating_meal.png",
     correctFoodId: "acorn",
     correctFoodLabel: "Acorns",
     correctFoodImage: "./assets/acorn.png",
@@ -226,6 +237,10 @@ export function buildChoices(question, random = Math.random) {
       isCorrect: acceptedFoodIds.includes(food.id),
     };
   });
+}
+
+export function getRevealBirdImage(question) {
+  return question.revealBirdImage ?? question.birdImage;
 }
 
 export function getFoodBank() {

@@ -1,7 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { QUESTION_BANK, buildChoices, buildRound } from "./game-data.js";
+import {
+  QUESTION_BANK,
+  buildChoices,
+  buildRound,
+  getRevealBirdImage,
+} from "./game-data.js";
 
 test("buildRound returns four unique birds from the question bank", () => {
   const round = buildRound(QUESTION_BANK, 4, () => 0.42);
@@ -32,4 +37,15 @@ test("buildChoices supports multiple correct answers for a question", () => {
     new Set(choices.filter((choice) => choice.isCorrect).map((choice) => choice.id)),
     new Set(["acorn", "berries"]),
   );
+});
+
+test("getRevealBirdImage prefers the eating-meal artwork and falls back to the base bird art", () => {
+  const acornWoodpecker = QUESTION_BANK.find((entry) => entry.id === "acorn-woodpecker");
+  const tern = QUESTION_BANK.find((entry) => entry.id === "tern");
+
+  assert.equal(
+    getRevealBirdImage(acornWoodpecker),
+    "./assets/acorn_woodpecker_eating_meal.png",
+  );
+  assert.equal(getRevealBirdImage(tern), tern.birdImage);
 });

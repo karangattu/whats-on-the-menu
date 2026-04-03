@@ -1,4 +1,10 @@
-import { QUESTION_BANK, buildChoices, buildRound, getFoodBank } from "./game-data.js";
+import {
+  QUESTION_BANK,
+  buildChoices,
+  buildRound,
+  getFoodBank,
+  getRevealBirdImage,
+} from "./game-data.js";
 
 const ROUND_SIZE = 4;
 
@@ -16,11 +22,14 @@ const elements = {
   questionProgress: document.querySelector("#question-progress"),
   scorePill: document.querySelector("#score-pill"),
   birdName: document.querySelector("#bird-name"),
+  birdPanel: document.querySelector(".bird-panel"),
   birdImage: document.querySelector("#bird-image"),
   choiceGrid: document.querySelector("#choice-grid"),
   feedbackPanel: document.querySelector("#feedback-panel"),
   feedbackResult: document.querySelector("#feedback-result"),
   feedbackExplanation: document.querySelector("#feedback-explanation"),
+  answerReveal: document.querySelector("#answer-reveal"),
+  answerRevealImage: document.querySelector("#answer-reveal-image"),
   nextButton: document.querySelector("#next-button"),
   resultsTitle: document.querySelector("#results-title"),
   resultsMessage: document.querySelector("#results-message"),
@@ -48,7 +57,6 @@ function createChoiceButton(choice) {
   button.className = "choice-button";
   button.dataset.choiceId = choice.id;
   button.dataset.isCorrect = String(choice.isCorrect);
-  button.setAttribute("role", "listitem");
   button.innerHTML = `
     <span class="choice-button__image-wrap">
       <img src="${choice.image}" alt="${choice.label}" />
@@ -75,12 +83,17 @@ function renderQuestion() {
   elements.birdName.textContent = question.birdName;
   elements.birdImage.src = question.birdImage;
   elements.birdImage.alt = question.birdName;
+  elements.birdPanel.classList.remove("is-answered");
 
   elements.choiceGrid.replaceChildren(...choices.map(createChoiceButton));
   elements.feedbackPanel.hidden = true;
   elements.feedbackPanel.classList.remove("is-success", "is-failure");
   elements.feedbackResult.textContent = "";
   elements.feedbackExplanation.textContent = "";
+  elements.answerReveal.hidden = true;
+  elements.answerReveal.classList.remove("is-visible");
+  elements.answerRevealImage.src = "";
+  elements.answerRevealImage.alt = "";
   elements.nextButton.textContent =
     state.currentIndex === ROUND_SIZE - 1 ? "See Score" : "Next Bird";
 }
@@ -134,12 +147,23 @@ function handleChoice(selectedButton, choice) {
   const resultText = choice.isCorrect
     ? `Correct. ${question.birdName} would go for ${choice.label}.`
     : `Not quite. ${question.birdName} would go for ${acceptedSummary}.`;
+  const revealBirdImage = getRevealBirdImage(question);
+  const revealMatchesBaseImage = revealBirdImage === question.birdImage;
 
   elements.feedbackPanel.hidden = false;
   elements.feedbackPanel.classList.toggle("is-success", choice.isCorrect);
   elements.feedbackPanel.classList.toggle("is-failure", !choice.isCorrect);
   elements.feedbackResult.textContent = resultText;
   elements.feedbackExplanation.textContent = question.explanation;
+  elements.answerRevealImage.src = revealBirdImage;
+  elements.answerRevealImage.alt = revealMatchesBaseImage
+    ? question.birdName
+    : `${question.birdName} eating its meal`;
+  elements.answerReveal.hidden = false;
+  requestAnimationFrame(() => {
+    elements.answerReveal.classList.add("is-visible");
+  });
+  elements.birdPanel.classList.add("is-answered");
   elements.feedbackPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
   elements.nextButton.focus();
 }
@@ -198,6 +222,16 @@ function init() {
   elements.startButton.addEventListener("click", startRound);
   elements.nextButton.addEventListener("click", advanceRound);
   elements.replayButton.addEventListener("click", startRound);
+  elements.answerRevealImage.addEventListener("error", () => {
+    const question = getCurrentQuestion();
+
+    if (!question) {
+      return;
+    }
+
+    elements.answerRevealImage.src = question.birdImage;
+    elements.answerRevealImage.alt = question.birdName;
+  });
 
   registerServiceWorker();
 }
