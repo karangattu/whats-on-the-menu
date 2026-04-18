@@ -457,8 +457,8 @@ h1 {
 
 .reveal-viewer__dialog {
   position: relative;
-  width: min(900px, 100%);
-  max-height: min(92dvh, 900px);
+  width: min(96vw, 100%);
+  max-height: 96dvh;
   padding: 20px;
   border-radius: 30px;
   background:
@@ -514,7 +514,7 @@ h1 {
   display: grid;
   place-items: center;
   min-height: 320px;
-  max-height: min(70dvh, 720px);
+  max-height: min(80dvh, 860px);
   padding: 18px;
   border-radius: 24px;
   background:
@@ -526,7 +526,7 @@ h1 {
 .reveal-viewer__art img {
   width: 100%;
   max-width: 100%;
-  max-height: min(62dvh, 660px);
+  max-height: min(74dvh, 800px);
   object-fit: contain;
 }
 

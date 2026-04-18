@@ -171,13 +171,21 @@ function handleChoice(selectedButton, choice) {
   elements.answerRevealImage.src = revealBirdImage;
   elements.answerRevealImage.alt = revealAlt;
   elements.answerReveal.setAttribute("aria-label", `${getRevealViewerTitle(question)}. Tap to expand.`);
-  elements.answerReveal.hidden = false;
-  requestAnimationFrame(() => {
-    elements.answerReveal.classList.add("is-visible");
-  });
+  elements.answerReveal.hidden = true;
   elements.birdPanel.classList.add("is-answered");
-  elements.feedbackPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  elements.nextButton.focus();
+
+  // Auto-open full-screen splash of the bird
+  state.revealViewerOpen = true;
+  revealViewerReturnFocus = document.activeElement;
+  elements.revealViewerTitle.textContent = getRevealViewerTitle(question);
+  elements.revealViewerImage.src = revealBirdImage;
+  elements.revealViewerImage.alt = revealAlt;
+  elements.revealViewer.hidden = false;
+  elements.revealViewer.setAttribute("aria-hidden", "false");
+  document.body.classList.add("has-overlay");
+  requestAnimationFrame(() => {
+    elements.revealViewer.classList.add("is-visible");
+  });
 }
 
 function openRevealViewer() {
@@ -216,7 +224,11 @@ function closeRevealViewer({ restoreFocus = true } = {}) {
   elements.revealViewerTitle.textContent = "";
   document.body.classList.remove("has-overlay");
 
-  if (restoreFocus && revealViewerReturnFocus instanceof HTMLElement) {
+  // After closing splash, scroll feedback into view
+  if (state.answered && !elements.feedbackPanel.hidden) {
+    elements.feedbackPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    elements.nextButton.focus();
+  } else if (restoreFocus && revealViewerReturnFocus instanceof HTMLElement) {
     revealViewerReturnFocus.focus();
   }
 
