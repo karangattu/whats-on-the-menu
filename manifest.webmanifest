@@ -1,6 +1,6 @@
 {
   "name": "What's on the Menu?",
-  "short_name": "Menu Birds",
+  "short_name": "What's on the Menu",
   "description": "An offline-capable bird diet quiz game for SFBBO.",
   "start_url": "./",
   "scope": "./",
@@ -9,8 +9,8 @@
   "theme_color": "#f4c95d",
   "icons": [
     {
-      "src": "./assets/sfboo_logo.png",
-      "sizes": "2079x2079",
+      "src": "./assets/app_icon.png",
+      "sizes": "1024x1024",
       "type": "image/png"
     }
   ]
